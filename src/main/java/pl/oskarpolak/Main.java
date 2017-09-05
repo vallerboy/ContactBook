@@ -1,9 +1,6 @@
 package pl.oskarpolak;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Main {
 
@@ -12,9 +9,27 @@ public class Main {
 
         MysqlConnector connector = MysqlConnector.getInstance();
         try {
-            Statement statement = connector.getConnection().createStatement();
-            statement.execute("" +
-                    "INSERT INTO book1 VALUES(0, 'KsiazkaZJavy', 'Oskar', 50, '1991-05-01')");
+            PreparedStatement statement = connector.getConnection().prepareStatement(
+                    "INSERT INTO book1 VALUES(?, ?, ?, ?, ?)"
+            );
+            statement.setInt(1, 0);
+            statement.setString(2, "mojaKsiazka");
+            statement.setString(3, "Tomek");
+            statement.setInt(4, 999);
+            statement.setString(5, "1950-05-05");
+
+           statement.execute();
+
+           Statement statement1 = connector.getConnection().createStatement();
+           statement.executeQuery("INSERT INTO book1 VALUES(0, ')" + "tytul','" + "autor','" + 999 + "','" + "1999-01-01')");
+
+           Statement statement2 = connector.getConnection().createStatement();
+           ResultSet set = statement2.executeQuery("SELECT * FROM book1");
+
+           while (set.next()){
+               System.out.println("tutaj moge wyswietlac dane!");
+           }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
