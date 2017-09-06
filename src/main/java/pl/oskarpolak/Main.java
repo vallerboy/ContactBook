@@ -1,39 +1,46 @@
 package pl.oskarpolak;
 
+import pl.oskarpolak.models.ContactModel;
+import pl.oskarpolak.models.dao.ContactDao;
+import pl.oskarpolak.models.dao.impl.ContactDaoImpl;
+
 import java.sql.*;
+import java.util.Scanner;
 
 public class Main {
-
-
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String response;
+        ContactDao contactDao = new ContactDaoImpl();
 
-        MysqlConnector connector = MysqlConnector.getInstance();
-        try {
-            PreparedStatement statement = connector.getConnection().prepareStatement(
-                    "INSERT INTO book1 VALUES(?, ?, ?, ?, ?)"
-            );
-            statement.setInt(1, 0);
-            statement.setString(2, "mojaKsiazka");
-            statement.setString(3, "Tomek");
-            statement.setInt(4, 999);
-            statement.setString(5, "1950-05-05");
+        do {
+            System.out.println("Wpisz: ");
+            System.out.println("1 - aby dodać nowy kontakt");
+            System.out.println("2 - aby usunąć kontakt");
+            System.out.println("3 - aby wyświetlić wszystkie kontakty");
 
-           statement.execute();
+            System.out.print("Odpowiedź: ");
+            response = scanner.nextLine();
 
-           Statement statement1 = connector.getConnection().createStatement();
-           statement.executeQuery("INSERT INTO book1 VALUES(0, ')" + "tytul','" + "autor','" + 999 + "','" + "1999-01-01')");
+            switch (response){
+                case "1": {
+                    ContactModel model = new ContactModel(scanner.nextLine(), scanner.nextLine(), scanner.nextLine());
+                    contactDao.addContact(model);
+                    break;
+                }
+                case "2": {
+                    System.out.print("Podaj numer który chcesz usunąć: ");
+                    contactDao.removeContact(scanner.nextLine());
+                    break;
+                }
+                case "3": {
+                    for (ContactModel contactModel : contactDao.getAllContacts()) {
+                        System.out.println(contactModel.toString());
+                    }
+                    break;
+                }
+            }
 
-           Statement statement2 = connector.getConnection().createStatement();
-           ResultSet set = statement2.executeQuery("SELECT * FROM book1");
-
-           while (set.next()){
-               System.out.println("tutaj moge wyswietlac dane!");
-           }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
+        }while (!response.equals("exit"));
     }
 }
