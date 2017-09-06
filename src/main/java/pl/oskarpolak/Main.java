@@ -18,6 +18,7 @@ public class Main {
             System.out.println("1 - aby dodać nowy kontakt");
             System.out.println("2 - aby usunąć kontakt");
             System.out.println("3 - aby wyświetlić wszystkie kontakty");
+            System.out.println("4 - aby wyswietlic imie i nazwisko po numerze");
 
             System.out.print("Odpowiedź: ");
             response = scanner.nextLine();
@@ -37,6 +38,11 @@ public class Main {
                     for (ContactModel contactModel : contactDao.getAllContacts()) {
                         System.out.println(contactModel.toString());
                     }
+                    break;
+                }
+                case "4": {
+                    System.out.print("Wpisz numer telefonu: ");
+                    System.out.println(contactDao.getContactByNumber(scanner.nextLine()).toString());
                     break;
                 }
             }

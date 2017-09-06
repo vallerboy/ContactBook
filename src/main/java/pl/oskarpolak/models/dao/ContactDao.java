@@ -8,4 +8,5 @@ public interface ContactDao {
     void addContact(ContactModel model);
     void removeContact(String number);
     List<ContactModel> getAllContacts();
+    ContactModel getContactByNumber(String number);
 }
